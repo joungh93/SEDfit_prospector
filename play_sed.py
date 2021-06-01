@@ -109,19 +109,17 @@ e_m_AB = np.append(e_m_AB, np.maximum(0.10, e_mag))
 m_AB_0 = m_AB
 e_m_AB_0 = e_m_AB
 
-# m_AB = np.array([21.8803, 21.7509,
-#                  20.6064, 20.0843, 19.9286, 19.8257, 19.7377,
-#                  20.5797, 20.5114])
-# e_m_AB = np.array([0.3322, 0.1882,
-#                    0.1, 0.1, 0.1, 0.1, 0.1,
-#                    0.1, 0.1])
+m_AB = np.array([21.148338, 20.739069, 20.606356, 20.08427 , 19.92863 , 19.82573 ,
+        19.737734, 20.579687, 20.511412])
+e_m_AB = np.array([0.23774792, 0.12155162, 0.1, 0.1, 0.1,
+        0.1, 0.1, 0.1 , 0.1])
 
 ## Cosmological parameters
 redshift = 0.3527
 cosmo = FlatLambdaCDM(H0=70, Om0=0.3)
 ldist = cosmo.luminosity_distance(redshift).value  # Mpc
 
-'''
+
 # ----- Building the obs dictionary ----- #
 obs  = build_obs(filternames, m_AB, ldist,
                  [True]*len(filternames),
@@ -172,7 +170,7 @@ def plot_sed(spec_data, phot_data, theta, out):
     ax.tick_params(axis="both", labelsize=25.0, pad=8.0)
     ax.set_xticks([1.0e-1, 5.0e-1, 1.0e+0, 5.0e+0, 1.0e+1])
     ax.set_xticklabels(["0.1", "0.5", "1", "5", "10"])
-    ax.set_xlabel(r"Wavelength ${\rm [\mu m]}$", fontsize=25.0, labelpad=10.0)
+    ax.set_xlabel(r"Wavelength ${\rm [\mu m]}$ (Observer-frame)", fontsize=25.0, labelpad=10.0)
     ax.set_ylabel(r"$\nu F_{\nu}~{\rm [erg~s^{-1}~cm^{-2}]}$", fontsize=25.0, labelpad=10.0)
     ax.set_xlim([xmin, xmax])
     ax.set_ylim([ymin, ymax])
@@ -418,7 +416,7 @@ plot_sed(mspec, mphot, theta_max, "sed3_lnpmax")
 # ----- Figure 3 setting (median) ----- #
 bspec, bphot, bfrac = model.sed(theta_med, obs=obs, sps=sps)
 plot_sed(bspec, bphot, theta_med, "sed3_median")
-'''
+
 
 # Printing the running time
 print("--- {0:.2f} seconds ---".format(time.time()-start_time))
