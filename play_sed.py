@@ -47,13 +47,6 @@ nlive, dlogz = [2000, 1000], 0.05
 # ----- Observation data ----- #
 c = 2.99792e+10  # cm/s
 
-# Foreground extinctions
-A_F435W = 0.109
-A_F606W = 0.075
-A_F814W = 0.046
-A_F110W = 0.027
-A_F140W = 0.018
-
 # Filter names
 galex = ["galex_FUV", "galex_NUV"]
 hst_acs = ["acs_wfc_f435w", "acs_wfc_f606w", "acs_wfc_f814w"]
@@ -63,60 +56,9 @@ spitzer = ["spitzer_irac_ch1", "spitzer_irac_ch2"]
 filternames = galex + hst_acs + hst_wfc3_ir + spitzer
 
 # Object information
-m_AB = np.array([])
-e_m_AB = np.array([])
+m_AB, e_m_AB = np.loadtxt("phot_results.txt").T
+e_m_AB = np.maximum(e_m_AB, 0.1)
 
-## MACSJ1752-JFG2 (GALEX)
-dir_galex = "/data/jlee/DATA/HLA/McPartland+16/MACS1752/test_SED/MAST/GALEX/"
-mag, e_mag = np.loadtxt(dir_galex+"phot_result.txt")
-# for i in np.arange(len(ps1)):
-#     exec("mag[i] = mag[i] - A_"+ps1[i])
-m_AB = np.append(m_AB, mag)
-e_m_AB = np.append(e_m_AB, np.maximum(0.10, e_mag))
-
-## MACSJ1752-JFG2 (HST)
-dir_phot = "/data/jlee/DATA/HLA/McPartland+16/MACS1752/JFG2/Phot/"
-sep2_list = glob.glob(dir_phot+"d_sep2_*.pkl")
-sep2_list = sorted(sep2_list)
-f_order = [2, 3, 4, 0, 1]
-sep2_list = np.array(sep2_list)[f_order]
-
-num_JFG2 = 12171
-id_JFG2 = num_JFG2-1
-
-filt = []
-
-for i in np.arange(len(sep2_list)):
-    filt_split = sep2_list[i].split('.pkl')[0].split('d_sep2_')[1]
-    filt.append(sep2_list[i].split('.pkl')[0].split('d_sep2_')[1])
-    df_name = "d_sep2_"+filt_split
-    exec(df_name+" = pd.read_pickle('"+sep2_list[i]+"')")
-    exec("mag = "+df_name+f"['mag_auto'].values[{id_JFG2:d}]-A_F"+filt_split+"W")
-    exec("e_mag = "+df_name+f"['merr_auto'].values[{id_JFG2:d}]")
-    m_AB = np.append(m_AB, mag)
-    e_m_AB = np.append(e_m_AB, np.maximum(0.10, e_mag))
-
-## MACSJ1752-JFG2 (Spitzer/IRAC)
-dir_irac = "/data/jlee/DATA/Spitzer/IRAC/MACS1752/Phot/"
-mag, e_mag = np.loadtxt(dir_irac+"phot_result.txt")
-# for i in np.arange(len(ps1)):
-#     exec("mag[i] = mag[i] - A_"+ps1[i])
-m_AB = np.append(m_AB, mag)
-e_m_AB = np.append(e_m_AB, np.maximum(0.10, e_mag))
-
-
-### Revised
-m_AB_0 = m_AB
-e_m_AB_0 = e_m_AB
-
-# m_AB = np.array([21.148338, 20.739069, 20.606356, 20.08427 , 19.92863 , 19.82573 ,
-#         19.737734, 20.579687, 20.511412])
-m_AB = np.array([21.250765, 20.693089, 20.605963, 20.084124, 19.92859 , 19.825674,
-        19.737762, 20.532606, 20.504128])
-# e_m_AB = np.array([0.23774792, 0.12155162, 0.1, 0.1, 0.1,
-#         0.1, 0.1, 0.1 , 0.1])
-e_m_AB = np.array([0.24934599, 0.11980917, 0.1, 0.1, 0.1,
-         0.1, 0.1, 0.1 , 0.1])
 
 ## Cosmological parameters
 redshift = 0.3527
