@@ -62,7 +62,7 @@ e_m_AB = np.maximum(e_m_AB, 0.1)
 
 ## Cosmological parameters
 redshift = 0.3527
-cosmo = FlatLambdaCDM(H0=70, Om0=0.3)
+cosmo = FlatLambdaCDM(H0=70, Om0=0.3, Tcmb0=2.725)
 ldist = cosmo.luminosity_distance(redshift).value  # Mpc
 
 
@@ -75,7 +75,7 @@ obs  = build_obs(filternames, m_AB, ldist,
 # ----- Building the model dictionary ----- #
 fx_metal = 0.0
 model = build_model(object_redshift=redshift, luminosity_distance=ldist,
-                    fixed_metallicity=fx_metal, fixed_dust2=False,
+                    fixed_metallicity=fx_metal, fixed_dust2=2.39,
                     add_duste=True, add_neb=True)
 
 
