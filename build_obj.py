@@ -98,6 +98,7 @@ def build_obs(filternames, mags, ldist, phot_mask,
 
 def build_model(object_redshift=None, luminosity_distance=0.0, fixed_metallicity=None,
                 fixed_dust2=False, add_duste=False, add_neb=False,
+                f_agn=None,
                 mass_0=1.0e+8, logzsol_0=-0.5, dust2_0=0.05, tage_0=13., tau_0=1.,
                 mass_1=1.0e+7, logzsol_1=0.5, dust2_1=0.5, tage_1=5., tau_1=3.,
                 mass_2=1.0e+6, logzsol_2=0.1, dust2_2=0.1, tage_2=2., tau_2=1.,
@@ -176,8 +177,8 @@ def build_model(object_redshift=None, luminosity_distance=0.0, fixed_metallicity
     model_params["tau"]["disp_floor"] = tau_2
 
     # adjust priors
-    model_params["mass"]["prior"] = priors.LogUniform(mini=1.0e+7,  maxi=1.0e+12)    
-    model_params["logzsol"]["prior"] =  priors.TopHat(mini=-2.0, maxi=0.19)    
+    model_params["mass"]["prior"] = priors.LogUniform(mini=1.0e+6,  maxi=1.0e+12)    
+    model_params["logzsol"]["prior"] =  priors.TopHat(mini=-2.0, maxi=0.3)    
     model_params["dust2"]["prior"]  = priors.TopHat(mini=0.0, maxi=2.0)
     model_params["tage"]["prior"] = priors.TopHat(mini=0.001, maxi=13.8)
     model_params["tau"]["prior"] =  priors.LogUniform(mini=0.1, maxi=30.0)
@@ -207,6 +208,12 @@ def build_model(object_redshift=None, luminosity_distance=0.0, fixed_metallicity
     if  add_neb:
         #   Add nebular emission (with fixed parameters)
         model_params.update(TemplateLibrary["nebular"])
+
+    if  f_agn is not None:
+        #   Add AGN component (with fixed parameters)
+        model_params.update(TemplateLibrary["agn"])
+        model_params["fagn"]["isfree"] = False
+        model_params["fagn"]["init"] = f_agn
 
     # Now instantiate the model using this  new dictionary of parameter specifications
     model = SedModel(model_params)
