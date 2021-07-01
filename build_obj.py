@@ -97,7 +97,7 @@ def build_obs(filternames, mags, ldist, phot_mask,
 
 
 def build_model(object_redshift=None, luminosity_distance=0.0, fixed_metallicity=None,
-                fixed_dust2=False, add_duste=False, add_neb=False,
+                fixed_dust2=None, add_duste=False, add_neb=False,
                 f_agn=None,
                 mass_0=1.0e+8, logzsol_0=-0.5, dust2_0=0.05, tage_0=13., tau_0=1.,
                 mass_1=1.0e+7, logzsol_1=0.5, dust2_1=0.5, tage_1=5., tau_1=3.,
@@ -116,8 +116,8 @@ def build_model(object_redshift=None, luminosity_distance=0.0, fixed_metallicity
     :param  fixed_metallicity: (optional, default: None)
         If given,   fix the model metallicity (:math:`log(Z/Z_sun)`) to the given value.
     
-    :param  fixed_dust2: (optional, default: False)
-        If `True`, fix the diffuse dust parameter   to the initially given value.
+    :param  fixed_dust2: (optional, default: None)
+        If given, fix the diffuse dust parameter   to the initially given value.
         
     :param  add_duste: (optional, default: False)
         If `True`, add dust emission and associated (fixed) parameters to   the model.
@@ -179,7 +179,7 @@ def build_model(object_redshift=None, luminosity_distance=0.0, fixed_metallicity
     # adjust priors
     model_params["mass"]["prior"] = priors.LogUniform(mini=1.0e+6,  maxi=1.0e+12)    
     model_params["logzsol"]["prior"] =  priors.TopHat(mini=-2.0, maxi=0.3)    
-    model_params["dust2"]["prior"]  = priors.TopHat(mini=0.0, maxi=2.0)
+    model_params["dust2"]["prior"]  = priors.TopHat(mini=0.0, maxi=4.0)
     model_params["tage"]["prior"] = priors.TopHat(mini=0.001, maxi=13.8)
     model_params["tau"]["prior"] =  priors.LogUniform(mini=0.1, maxi=30.0)
 
@@ -190,10 +190,10 @@ def build_model(object_redshift=None, luminosity_distance=0.0, fixed_metallicity
         #And use value supplied by fixed_metallicity keyword
         model_params["logzsol"]["init"] =   fixed_metallicity
 
-    if  fixed_dust2:
+    if  fixed_dust2 is not None:
         #   make it a fixed parameter
         model_params["dust2"]["isfree"] =   False
-        model_params["dust2"]["init"]   = 0.6    # initially given value
+        model_params["dust2"]["init"]   = fixed_dust2    # initially given value: 0.6
 
     if  object_redshift is not None:
         #   make sure zred is fixed
