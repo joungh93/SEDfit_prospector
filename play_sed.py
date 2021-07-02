@@ -75,7 +75,7 @@ obs  = build_obs(filternames, m_AB, ldist,
 # ----- Building the model dictionary ----- #
 fx_metal = 0.0
 model = build_model(object_redshift=redshift, luminosity_distance=ldist,
-                    fixed_metallicity=fx_metal, fixed_dust2=2.39,
+                    fixed_metallicity=fx_metal, fixed_dust2=None,
                     add_duste=True, add_neb=True)
 
 
@@ -156,8 +156,11 @@ def plot_sed(spec_data, phot_data, theta, out):
     ax.text(1.02, 0.70, r"$[Z/Z_{\odot}]=%.2f$ (fixed)" \
             %(fx_metal), fontsize=20.0, color="black",
             ha="left", va="top", transform=ax.transAxes)
-    ax.text(1.02, 0.65, r"$\^{\tau}_{2}=%.3f$" \
-            %(theta[1]), fontsize=20.0, color="blue",
+    # ax.text(1.02, 0.65, r"$\^{\tau}_{2}=%.3f$" \
+    #         %(theta[1]), fontsize=20.0, color="blue",
+    #         ha="left", va="top", transform=ax.transAxes)
+    ax.text(1.02, 0.65, r"$A_{V}=%.2f$ mag" \
+            %(1.086*theta[1]), fontsize=20.0, color="blue",
             ha="left", va="top", transform=ax.transAxes)
     ax.text(1.02, 0.60, r"$t_{\rm age}=%.2f$ Gyr" \
             %(theta[2]), fontsize=20.0, color="blue",
